@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\build",
+    "\\build\\PR00_UnitTest",
+    "\\build\\PR00_UnitTest\\vs2022",
+    "\\include",
+    "\\include\\ML",
+    "\\src",
+    "\\src\\ML",
+    "\\tests"
+  ],
+  "SelectedNode": "\\include\\ML\\vec_2.inl",
+  "PreviewInSolutionExplorer": false
+}

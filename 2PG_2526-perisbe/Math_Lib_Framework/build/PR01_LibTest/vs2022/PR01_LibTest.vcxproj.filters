@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\ML">
+      <UniqueIdentifier>{1141B8DA-FDF8-F927-6600-D38352D79418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{78756B10-E489-93C1-AD0B-372119DF8FF2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\ML\mat_2.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\mat_3.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\mat_4.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_2.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_3.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_4.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\tests\PR01_LibTest.cc">
+      <Filter>tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

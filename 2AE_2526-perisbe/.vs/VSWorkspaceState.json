@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\ESAT_AED_Workflow",
+    "\\ESAT_AED_Workflow\\App",
+    "\\ESAT_AED_Workflow\\App\\src",
+    "\\ESAT_AED_Workflow\\build",
+    "\\ESAT_AED_Workflow\\build\\premake"
+  ],
+  "SelectedNode": "\\ESAT_AED_Workflow\\App\\src\\main.c",
+  "PreviewInSolutionExplorer": false
+}
