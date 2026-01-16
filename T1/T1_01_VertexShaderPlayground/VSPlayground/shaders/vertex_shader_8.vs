@@ -103,8 +103,8 @@ mat4 InitAsOrtho(float left, float right, float top, float bottom,
 void main(){
 
   mat4 model = InitAsTranslate(0.0,0.0,0.0);
-  mat4 view = InitAsView(vec3(0.0,0.0,0.0), u_camera_position, vec3(0.0,1.0,0.0));
-  mat4 projection = InitAsPerspective(1.57, 0.1, 100.0);
+  mat4 view = InitAsView(vec3(0.0,1.0,0.0), u_camera_position, vec3(0.0,1.0,0.0));
+  mat4 projection = InitAsPerspective(0.6, 0.1, 100.0);
 
   gl_Position = projection * view * model * vec4(a_position, 1.0);
   uv = a_uv;

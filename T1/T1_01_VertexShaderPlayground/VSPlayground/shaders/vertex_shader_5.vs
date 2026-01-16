@@ -36,17 +36,17 @@ mat4 InitAsRotate(vec3 axis, float angle) {
   float c = cos(angle);
   float oc = 1.0 - c;
 
-  float m_00 = oc * axis.x * axis.y + c;
-  float m_01 = oc * axis.x * axis.y - axis.z * s;
-  float m_02 = oc * axis.x * axis.z + axis.y * s;
+  float m_00 = oc * ax.x * ax.x + c;
+  float m_01 = oc * ax.x * ax.y - ax.z * s;
+  float m_02 = oc * ax.x * ax.z + ax.y * s;
 
-  float m_04 = oc * axis.x * axis.y + axis.z * s;
-  float m_05 = oc * axis.y * axis.y + c;
-  float m_06 = oc * axis.y * axis.z + axis.x * s;
+  float m_04 = oc * ax.x * ax.y + ax.z * s;
+  float m_05 = oc * ax.y * ax.y + c;
+  float m_06 = oc * ax.y * ax.z - ax.x * s;
 
-  float m_08 = oc * axis.x * axis.z + axis.y * s;
-  float m_09 = oc * axis.y * axis.z + axis.x * s;
-  float m_10 = oc * axis.z * axis.z + c;
+  float m_08 = oc * ax.x * ax.z - ax.y * s;
+  float m_09 = oc * ax.y * ax.z + ax.x * s;
+  float m_10 = oc * ax.z * ax.z + c;
 
   return mat4( m_00, m_01, m_02, 0.0,
                m_04, m_05, m_06, 0.0,
@@ -102,14 +102,13 @@ mat4 InitAsOrtho(float left, float right, float top, float bottom,
 
 void main(){
   mat4 model = InitAsTranslate(0.0, 0.0, 0.0);
-  mat4 scale = InitAsScale(0.3, 0.3, 0.3);
   mat4 view = InitAsView(vec3(0.0, 0.0, 0.0), vec3(0.0, 3.0, 5.0), vec3(0.0, 1.0, 0.0));
 
   float aspect_ratio = u_window_size.x / u_window_size.y;
-  float ortho_height = 2.0;
+  float ortho_height = 10.0;
   float ortho_width = ortho_height * aspect_ratio;
   mat4 projection = InitAsOrtho(-ortho_width, ortho_width, -ortho_height, ortho_height, 0.1, 100.0);
 
-  gl_Position = projection * view * scale * model * vec4(a_position, 1.0);
+  gl_Position = projection * view *  model * vec4(a_position, 1.0);
   uv = a_uv;
 }

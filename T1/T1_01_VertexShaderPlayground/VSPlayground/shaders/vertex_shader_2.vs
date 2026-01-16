@@ -27,7 +27,7 @@ mat4 InitAsScale(float sx, float sy, float sz) {
   return mat4( sx, 0.0, 0.0, 0.0,
               0.0,  sy, 0.0, 0.0,
               0.0, 0.0,  sz, 0.0,
-               sx,  sy,  sz, 1.0);
+              0.0, 0.0, 0.0, 1.0);
 }
 
 mat4 InitAsRotate(vec3 axis, float angle) {
@@ -87,8 +87,8 @@ mat4 InitAsPerspective(float fov, float z_near, float z_far) {
 mat4 InitAsOrtho(float left, float right, float top, float bottom,
                  float near, float far) {
   float m_00 = 2.0 / (right - left);
-  float m_05 = 2.0 / (top - bottom);
-  float m_10 = 2.0 / (far - near);
+  float m_05 = -2.0 / (top - bottom);
+  float m_10 = -2.0 / (far - near);
   float m_12 = -(right + left) / (right - left);
   float m_13 = -(top + bottom) / (top - bottom);
   float m_14 = -(far + near) / (far - near);
@@ -96,15 +96,15 @@ mat4 InitAsOrtho(float left, float right, float top, float bottom,
   return mat4( m_00,  0.0,  0.0, 0.0,
                 0.0, m_05,  0.0, 0.0,
                 0.0,  0.0, m_10, 0.0,
-               m_12, m_13, m_14, 0.0);
+               m_12, m_13, m_14, 1.0);
 
 }
 
 void main(){
   
-  mat4 rotate = InitAsRotate(vec3(0,1,0), -u_time * 0.005);
+  mat4 rotate = InitAsRotate(vec3(0,1,0), u_time * 0.005);
   mat4 translate = InitAsTranslate(0.0,0.0,0.0);
-  mat4 model = translate * rotate;
+  mat4 model = rotate * translate;
   mat4 view = InitAsView(vec3(0.0,0.0,0.0), u_camera_position, vec3(0.0,1.0,0.0));
   mat4 projection = InitAsPerspective(1.57, 0.1, 100.0);
 

@@ -87,8 +87,8 @@ mat4 InitAsPerspective(float fov, float z_near, float z_far) {
 mat4 InitAsOrtho(float left, float right, float top, float bottom,
                  float near, float far) {
   float m_00 = 2.0 / (right - left);
-  float m_05 = 2.0 / (top - bottom);
-  float m_10 = 2.0 / (far - near);
+  float m_05 = -2.0 / (top - bottom);
+  float m_10 = -2.0 / (far - near);
   float m_12 = -(right + left) / (right - left);
   float m_13 = -(top + bottom) / (top - bottom);
   float m_14 = -(far + near) / (far - near);
@@ -96,16 +96,16 @@ mat4 InitAsOrtho(float left, float right, float top, float bottom,
   return mat4( m_00,  0.0,  0.0, 0.0,
                 0.0, m_05,  0.0, 0.0,
                 0.0,  0.0, m_10, 0.0,
-               m_12, m_13, m_14, 0.0);
+               m_12, m_13, m_14, 1.0);
 
 }
 
 void main(){
-  mat4 translate = InitAsTranslate(0.0, 0.0, 1.5);
-  mat4 scale = InitAsScale(0.3, 0.3, 0.3);
+  mat4 translate = InitAsTranslate(0.0, 0.0, 0.0);
+  mat4 scale = InitAsScale(0.1, 0.1, 0.1);
   mat4 model = translate * scale;
 
-  vec4 pos = model * vec4(a_position, 1.0);
-  gl_Position = vec4(pos.x, pos.y, pos.z, pos.z + 1.0);
+  gl_Position  = model * vec4(a_position, 1.0);
+  
   uv = a_uv;
 }
