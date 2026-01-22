@@ -103,18 +103,17 @@ mat4 InitAsOrtho(float left, float right, float top, float bottom,
 void main(){
   
  
-  mat4 rotate_x = InitAsRotate(vec3(1,0,0), 0.78);
-  mat4 rotate_y = InitAsRotate(vec3(0,1,0), u_time * 0.001);
-  mat4 translate = InitAsTranslate(0.0,0.0,-2.0);
-  mat4 model_rotate = rotate_y * rotate_x;
-  mat4 model = model_rotate * translate;
-  mat4 view = InitAsView(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 5.0), vec3(0.0, 1.0, 0.0));
-  mat4 projection = InitAsPerspective(1.57, 0.1, 100.0);
-  
-  
-  
+ 
+ 
+  mat4 rotate = InitAsRotate(a_normal, u_time * 0.001);
+  vec3 new_pos = (rotate * vec4(a_position, 1.0)).xyz;
 
-  gl_Position =   projection * view * model * vec4(a_position, 1.0);
+
+  mat4 model = InitAsTranslate(0.0,0.0,0.0);
+  mat4 view = InitAsView(vec3(0.0,0.0,0.0), u_camera_position, vec3(0.0,1.0,0.0));
+  mat4 projection = InitAsPerspective(1.57, 0.1, 100.0);
+
+  gl_Position = projection * view * model * vec4(new_pos, 1.0);
   uv = a_uv;
 }
 
