@@ -1,19 +1,25 @@
 #version 330
 
-layout (location = 0) in vec3 a_position;
-layout (location = 1) in vec3 a_normal;
-layout (location = 2) in vec2 a_uv;
-out vec2 uv;
-uniform vec2 u_window_size;
-uniform vec3 u_camera_position;
-uniform float u_time;
-
+//Cube size:
+//1.0 x 1.0 x 1.0
 //By default, in this demo the camera is in the following position:
-//0.0, 2.0, 3.0
+//3.0, 2.0, 3.0
 //By default, in this demo the object is in the following position:
 //0.0, 0.0, 0.0
 //By default, in this demo the window has the following size:
 //1000.0, 600.0
+
+uniform mat4 u_m_matrix;
+uniform mat4 u_vp_matrix;
+uniform float u_time;
+uniform vec2 u_window_size;
+
+layout (location = 0) in vec3 a_position;
+layout (location = 1) in vec3 a_normal;
+layout (location = 2) in vec2 a_uv;
+
+out vec3 normal;
+out vec2 uv;
 
 //Example of function which returns a translation matrix:
 mat4 InitAsTranslate(float tx, float ty, float tz) {
@@ -100,21 +106,22 @@ mat4 InitAsOrtho(float left, float right, float top, float bottom,
 
 }
 
-void main(){
-  
-  mat4 rotate_y_01 = InitAsRotate(vec3(0,1,0), u_time * 0.1);
-  mat4 rotate_z = InitAsRotate(vec3(0,0,1), 0.78);
-  mat4 rotate_y_02 = InitAsRotate(vec3(0,1,0), u_time * 0.001);
-  mat4 translate_x = InitAsTranslate(2.0,0.0,0.0);
-  mat4 translate_z = InitAsTranslate(0.0,0.0,-2.0);
-  mat4 model = translate_z * rotate_y_02 * translate_x * rotate_z * rotate_y_01;
-  mat4 view = InitAsView(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 5.0), vec3(0.0, 1.0, 0.0));
-  mat4 projection = InitAsPerspective(1.57, 0.1, 100.0);
-  
-  
+void main() {
+  mat4 rot = InitAsRotate(vec3(0.0, 1.0, 0.0), u_time * 0.001);
+  mat4 model = rot;
+
+  vec3 pos = a_position;
+  vec4 world_pos = model * vec4(pos, 1.0);
   
 
-  gl_Position = projection * view * model * vec4(a_position, 1.0);
+  //Plane XZ
+  vec3 dir = vec3(1.0, 0.0, 0.0);
+  vec3 pos_dir = normalize(vec3(world_pos.x,0.0, world_pos.z));
+  float d = clamp(dot(dir, pos_dir) * 5.0, 0.0, 1.0);
+
+  world_pos.y *= (1.0 - d);
+  gl_Position = u_vp_matrix * world_pos;
+
   uv = a_uv;
+  normal = a_normal * 0.5 + 0.5;
 }
-
