@@ -8,16 +8,20 @@ uniform vec2 u_window_size;
 out vec4 fragColor;
 
 void main() {
-  
-  float num_stripes = 6.0;
+
+  float aspect_ratio = u_window_size.x / u_window_size.y;
+  float num_stripes = 20;
   float frequency = num_stripes * 6.28;
   vec2 uv = (gl_FragCoord.xy / u_window_size);
 
-  float wave_xy= sin((uv.x + uv.y) * frequency / 2) * 0.5 + 0.5;
-  float stripes_xy = smoothstep(0.6, 0.85, wave_xy);
+  float wave_x = cos(uv.x * frequency * aspect_ratio) * 0.5 + 0.5;
+  float stripes_x = step(0.5, wave_x);
 
+  float wave_y = cos(uv.y * frequency) * 0.5 + 0.5;
+  float stripes_y = step(0.5, wave_y);
 
+  float squares = stripes_x * stripes_y;
 
-  fragColor = vec4(stripes_xy, stripes_xy,0.0,1.0);
+  fragColor = vec4(squares, squares,squares,1.0);
 
 }
