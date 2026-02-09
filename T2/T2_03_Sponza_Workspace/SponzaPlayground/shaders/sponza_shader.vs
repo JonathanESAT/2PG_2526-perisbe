@@ -12,8 +12,10 @@ layout (location = 0) in vec3 a_position;
 layout (location = 1) in vec3 a_normal;
 
 out vec3 normal;
+out vec3 pos;
 
 void main() {
   gl_Position = u_vp_matrix * u_m_matrix * vec4(a_position, 1.0);
-  normal = a_normal * 0.5 + 0.5;
+  normal = mat3(transpose(inverse(u_m_matrix))) * a_normal;
+  pos = vec3(u_m_matrix * vec4(a_position, 1.0));
 }

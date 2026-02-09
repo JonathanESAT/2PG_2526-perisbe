@@ -20,10 +20,10 @@ layout (location = 0) in vec3 a_position;
 layout (location = 1) in vec3 a_normal;
 
 out vec3 normal;
-out vec3 frag_pos;
+out vec3 pos;
 
 void main() {
   gl_Position = u_vp_matrix * u_m_matrix * vec4(a_position, 1.0);
   normal = mat3(transpose(inverse(u_m_matrix))) * a_normal;
-  frag_pos = vec3(u_m_matrix * vec4(a_position, 1.0));
+  pos = vec3(u_m_matrix * vec4(a_position, 1.0));
 }
