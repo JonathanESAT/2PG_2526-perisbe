@@ -24,7 +24,7 @@ struct Light{
   float linear;
   float quadratic;
 
-  //spot_light (both cos)
+  //spot_light 
   float inner_cutoff;
   float outer_cutoff;
 };
@@ -38,7 +38,7 @@ void InitLights() {
   // Sponza: X(-1921 a 1800), Y(-126 a 1429), Z(-1183 a 1105)
 
   // ------------------------------------------
-  // LIGHT 0 - POINT roja (extremo izquierdo)
+  // LIGHT 0 - POINT roja 
   // ------------------------------------------
   g_lights[0].enabled = 1;
   g_lights[0].type = 1;
@@ -54,7 +54,7 @@ void InitLights() {
   g_lights[0].outer_cutoff = 0.0;
 
   // ------------------------------------------
-  // LIGHT 1 - POINT naranja (centro)
+  // LIGHT 1 - POINT naranja 
   // ------------------------------------------
   g_lights[1].enabled = 1;
   g_lights[1].type = 1;
@@ -70,7 +70,7 @@ void InitLights() {
   g_lights[1].outer_cutoff = 0.0;
 
   // ------------------------------------------
-  // LIGHT 2 - POINT azul (extremo derecho)
+  // LIGHT 2 - POINT azul 
   // ------------------------------------------
   g_lights[2].enabled = 1;
   g_lights[2].type = 1;
@@ -86,7 +86,7 @@ void InitLights() {
   g_lights[2].outer_cutoff = 0.0;
 
   // ------------------------------------------
-  // LIGHT 3 - POINT verde (lateral Z+)
+  // LIGHT 3 - POINT verde 
   // ------------------------------------------
   g_lights[3].enabled = 1;
   g_lights[3].type = 1;
@@ -102,7 +102,7 @@ void InitLights() {
   g_lights[3].outer_cutoff = 0.0;
 
   // ------------------------------------------
-  // LIGHT 4 - POINT magenta (lateral Z-)
+  // LIGHT 4 - POINT magenta 
   // ------------------------------------------
   g_lights[4].enabled = 1;
   g_lights[4].type = 1;
@@ -118,7 +118,7 @@ void InitLights() {
   g_lights[4].outer_cutoff = 0.0;
 
   // ------------------------------------------
-  // LIGHT 5 - SPOT blanco (foco cenital centro)
+  // LIGHT 5 - SPOT blanco 
   // ------------------------------------------
   g_lights[5].enabled = 1;
   g_lights[5].type = 2;
@@ -134,7 +134,7 @@ void InitLights() {
   g_lights[5].outer_cutoff = cos(radians(35.0));
 
   // ------------------------------------------
-  // LIGHT 6 - SPOT cyan (foco izquierda)
+  // LIGHT 6 - SPOT cyan 
   // ------------------------------------------
   g_lights[6].enabled = 1;
   g_lights[6].type = 2;
@@ -150,7 +150,7 @@ void InitLights() {
   g_lights[6].outer_cutoff = cos(radians(30.0));
 
   // ------------------------------------------
-  // LIGHT 7 - SPOT amarillo (foco derecha)
+  // LIGHT 7 - SPOT amarillo 
   // ------------------------------------------
   g_lights[7].enabled = 1;
   g_lights[7].type = 2;
@@ -173,11 +173,10 @@ vec3 DirectionalLight(Light light){
   float diff_dot = max(dot(norm, light_dir), 0.0);
   vec3 diff_color = diff_dot * light.diff_color;
 
-  // Specular (Blinn-Phong):
+  // Specular:
   vec3 view_dir = normalize(u_camera_position - pos);
   vec3 halfway_dir = normalize(light_dir + view_dir);
-  float spec = pow(max(dot(norm, halfway_dir), 0.0),
-                    light.spec_shininess);
+  float spec = pow(max(dot(norm, halfway_dir), 0.0), light.spec_shininess);
   vec3 spec_color = spec * light.spec_color;
 
   // Color:
@@ -191,17 +190,14 @@ vec3 PointLight(Light light){
   float diff_dot = max(dot(norm, light_dir), 0.0);
   vec3 diff_color = diff_dot * light.diff_color;
 
-  // Specular (Blinn-Phong):
+  // Specular:
   vec3 view_dir = normalize(u_camera_position - pos);
   vec3 halfway_dir = normalize(light_dir + view_dir);
-  float spec = pow(max(dot(norm, halfway_dir), 0.0),
-                    light.spec_shininess);
+  float spec = pow(max(dot(norm, halfway_dir), 0.0), light.spec_shininess);
   vec3 spec_color = spec * light.spec_color;
 
   float distance = length(light.pos - pos);
-  float attenuation = 1.0 / (light.constant +
-                           light.linear * distance +
-                           light.quadratic * distance * distance);
+  float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
   return (diff_color + spec_color) * attenuation;
 }
 
@@ -211,7 +207,7 @@ vec3 SpotLight(Light light){
 
   vec3 light_dir = normalize(light.pos - pos);
 
-  // --- CÁLCULO DEL CONO DE LUZ ---
+
   float theta = dot(light_dir, normalize(-light.dir));
   float epsilon = light.inner_cutoff - light.outer_cutoff;
   float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
@@ -224,27 +220,25 @@ vec3 SpotLight(Light light){
   float diff = max(dot(norm, light_dir), 0.0);
   vec3 diffuse = diff * light.diff_color;
 
-  // --- SPECULAR (Blinn-Phong) ---
+  // --- SPECULAR ---
   vec3 view_dir = normalize(u_camera_position - pos);
   vec3 halfway_dir = normalize(light_dir + view_dir);
   float spec = pow(max(dot(norm, halfway_dir), 0.0), light.spec_shininess);
   vec3 specular = spec * light.spec_color;
 
-  // --- ATENUACIÓN ---
+  // --- ATENUACION ---
   float distance = length(light.pos - pos);
-  float attenuation = 1.0 / (light.constant +
-                              light.linear * distance +
-                              light.quadratic * distance * distance);
+  float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
 
   return (diffuse + specular) * intensity * attenuation;
 }
 
 void main() {
   InitLights();
-    // --- AMBIENT (luz global mínima) ---
+    // --- AMBIENT ---
   vec3 ambient = g_ambient_strength * g_ambient_color;
   
-  // --- ACUMULACIÓN DE LUCES ---
+  
   vec3 lighting = vec3(0.0);
 
   for(int i = 0; i < 8; ++i){
@@ -263,11 +257,10 @@ void main() {
   }
 
   // --- COLOR FINAL ---
-  // Combinar ambient + luces, multiplicar por color base del objeto
-  vec3 albedo = vec3(0.8, 0.8, 0.8); // Gris claro (o usa u_albedo si lo pasas)
+  vec3 albedo = vec3(0.8, 0.8, 0.8);
   vec3 final_color = (ambient + lighting) * albedo;
   
-  // Clamp para evitar valores > 1.0 (sobreexposición)
+ 
   final_color = clamp(final_color, 0.0, 1.0);
   
   fragColor = vec4(final_color, 1.0);
