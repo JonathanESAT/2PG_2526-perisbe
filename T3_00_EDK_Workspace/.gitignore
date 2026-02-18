@@ -1,0 +1,36 @@
+# Claude Code settings
+.claude/
+
+# Compiled binaries
+bin/
+
+# Visual Studio IDE metadata
+build/.vs/
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
+*.vsidx
+
+# Compiled intermediate files
+build/*/Debug/
+build/*/Release/
+
+# Duplicate asset copies inside build directories
+build/*/vs2022/test/
+build/*/test/
+
+# Build artifacts (not tools)
+bin/**/*.exe
+build/**/*.exe
+*.ilk
+*.ipch
+*.pdb
+*.idb
+*.log
+*.recipe
+*.tlog
+*.lastbuildstate
+
+# ImGui per-instance config
+imgui.ini
