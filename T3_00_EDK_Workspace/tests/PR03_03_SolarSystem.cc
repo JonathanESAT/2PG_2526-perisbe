@@ -87,7 +87,7 @@ void InitScene() {
   };
 
   for (int i = 0; i < kNumPlanets; ++i) {
-    //Pivot: al rotarlo, el planeta orbita el sol
+    //Pivot: 
     EDK::Node* pivot = GameState.planets[i].orbit_pivot.alloc();
     root->addChild(pivot);
 

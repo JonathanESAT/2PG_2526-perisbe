@@ -1,10 +1,10 @@
 /*
- *
+ * 
  * Ivan Sancho as Unreal Authorized Instructor, 2022-23
  * Graphics Programming
- *
- * PR03_02_FirstScene.cc
- *
+ * 
+ * PR03_00_Template.cc
+ * 
  */
 
 
@@ -26,94 +26,141 @@
 #include "EDK/dev/edk_opengl.h"
 
 
+//Unnamed struct and it's unique instance:
 struct {
-  EDK::ref_ptr<EDK::Camera>   camera;
-  EDK::ref_ptr<EDK::Node>     root;
-  EDK::ref_ptr<EDK::Drawable> sun;
+  EDK::ref_ptr<EDK::Camera> camera;
+  EDK::ref_ptr<EDK::Node> root;
+  EDK::ref_ptr<EDK::Node> pivot;
 } GameState;
 
-const int kWindowWidth  = 1024;
+const int kWindowWidth = 1024;
 const int kWindowHeight = 768;
 
 
 void InitScene() {
+  //Allocating root node:
   EDK::Node* root = GameState.root.alloc();
 
-  EDK::ref_ptr<EDK::Texture> texture;
-  EDK::Texture::Load("./test/T_EDK_Logo.png", &texture);
-  if (!texture) {
-    printf("Can't load T_EDK_Logo.png\n");
-    exit(-2);
+  char* paths[] = { "./test/T_Chopper.jpg",
+                    "./test/T_EDK_Logo.png",
+                    "./test/SM_Suzanne.obj",
+                    "./test/T_Rainbow.png"};
+
+  float pos_cubes[3][3] = { { 2.0f, 0.0f, 0.0f},
+						                { -2.0f, 0.0f,0.0f},
+                            { 0.0f, 2.0f, 0.0f} };
+
+  // Pivot at monkey position: cubes will orbit around it
+  EDK::Node* pivot = GameState.pivot.alloc();
+  pivot->set_position(pos_cubes[2]);
+  root->addChild(pivot);
+
+  //Geometry:
+  EDK::ref_ptr<EDK::Geometry> cube_geo;
+  EDK::CreateCube(&cube_geo);
+
+
+
+    //Material, settings:
+
+  EDK::ref_ptr<EDK::MatDiffuseTexture> cube_mat;
+  cube_mat.alloc();
+  float color[4] = { 1.0,1.0,1.0,1.0 };
+
+  for (int i = 0; i < 2; i++) {
+
+      EDK::ref_ptr<EDK::Texture> cube_texture;
+      EDK::Texture::Load(paths[i], &cube_texture); //alloc inside
+
+      EDK::ref_ptr<EDK::MatDiffuseTexture::Settings> cube_mat_set;
+      cube_mat_set.alloc();
+
+      cube_mat_set->set_color(color);
+      cube_mat_set->set_texture(cube_texture.get());
+
+      //Drawable:
+      EDK::ref_ptr<EDK::Drawable> cube_drawable;
+      cube_drawable.alloc();
+
+      cube_drawable->set_geometry(cube_geo.get());
+      cube_drawable->set_material(cube_mat.get());
+      cube_drawable->set_material_settings(cube_mat_set.get());
+      cube_drawable->set_position(pos_cubes[i]);
+
+      pivot->addChild(cube_drawable.get());
   }
 
-  EDK::ref_ptr<EDK::MatDiffuseTexture> mat;
-  mat.alloc();
+  //OBJ:
+  EDK::scoped_array<EDK::ref_ptr<EDK::Geometry>> obj_geos;
+  EDK::scoped_array<char> error_log;
+  EDK::LoadObj(paths[2], &obj_geos, &error_log);
 
-  EDK::ref_ptr<EDK::MatDiffuseTexture::Settings> mat_set;
-  mat_set.alloc();
-  float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-  mat_set->set_color(white);
-  mat_set->set_texture(texture.get());
+  EDK::ref_ptr<EDK::Texture> obj_texture;
+  EDK::Texture::Load(paths[3], &obj_texture);
 
-  EDK::ref_ptr<EDK::Geometry> cube_geo;
-  EDK::CreateCube(&cube_geo, 1.0f, true, true);
+  EDK::ref_ptr<EDK::MatDiffuseTexture::Settings> obj_mat_set;
+  obj_mat_set.alloc();
+  obj_mat_set->set_color(color);
+  obj_mat_set->set_texture(obj_texture.get());
 
-  //Sol:
-  GameState.sun.alloc();
-  GameState.sun->set_geometry(cube_geo.get());
-  GameState.sun->set_material(mat.get());
-  GameState.sun->set_material_settings(mat_set.get());
-  GameState.sun->set_scale(20.0f, 20.0f, 20.0f);
-  root->addChild(GameState.sun.get());
+  EDK::ref_ptr<EDK::Drawable> obj_drawable;
+  obj_drawable.alloc();
+  obj_drawable->set_geometry(obj_geos[0].get());
+  obj_drawable->set_material(cube_mat.get());
+  obj_drawable->set_material_settings(obj_mat_set.get());
+  obj_drawable->set_position(pos_cubes[2]);
+  root->addChild(obj_drawable.get());
 
-  //Camara:
+
+  //Allocating and initializing the camera:
   GameState.camera.alloc();
-  float pos[]  = { 120.0f, 140.0f, 120.0f };
-  float view[] = { -120.0f, -140.0f, -120.0f };
+  float pos[] = { 0.0f, 4.0f, 6.0f };
+  float target[] = { 0.0f, 0.0f, 0.0f };
   GameState.camera->set_position(pos);
-  GameState.camera->set_view_direction(view);
-  GameState.camera->setupPerspective(70.0f, 8.0f / 6.0f, 1.0f, 1500.0f);
+  GameState.camera->set_view_target(target);
+  float ar = (float) kWindowWidth / (float) kWindowHeight;
+  GameState.camera->setupPerspective(60.0f, ar, 1.0f, 1500.0f);
   EDK::dev::GPUManager::CheckGLError("Prepare END");
 }
 
-
-void UpdateFn() {
+void UpdateFn(double delta_time) {
   GameState.camera->set_clear_color(0.94f, 1.0f, 0.94f, 1.0f);
-
-  float t = (float)(esat::Time() * 0.001f);
-  GameState.sun->set_rotation_y(t * 30.0f);
+  static float rotation = 0.0f;
+  rotation += (float)(delta_time * 0.09f);
+  GameState.root->child(1)->set_rotation_y(rotation);  // mono gira sobre si mismo
+  GameState.pivot->set_rotation_y(rotation);            // pivot orbita los cubos alrededor del mono
 }
 
-
 void RenderFn() {
+  //For every frame... determine what's visible:
   GameState.camera->doCull(GameState.root.get());
+
+  //Rendering the scene:
   EDK::dev::GPUManager::CheckGLError("begin Render-->");
   GameState.camera->doRender();
   EDK::dev::GPUManager::CheckGLError("end Render-->");
 }
 
-
-void ImGuiFn(double dt) {
+void ImGuiFn(double delta_time) {
   ImGui::Begin("FPS Window");
-  ImGui::Text("FPS: %0.1f", 1000.0 / dt);
-  ImGui::Text("Delta time: %0.3f ms", dt);
+  ImGui::Text("FPS: %0.1f", 1000.0 / delta_time);
+  ImGui::Text("Delta time: %0.3f ms", delta_time);
   ImGui::End();
   ImGui::Render();
 }
 
-
 int esat::main(int argc, char** argv) {
   esat::WindowInit(kWindowWidth, kWindowHeight);
   InitScene();
-  double dt = 0.0;
+  double delta_time = 0.0;
   double last_time = esat::Time();
   while (!esat::IsSpecialKeyDown(esat::kSpecialKey_Escape) &&
          esat::WindowIsOpened()) {
-    UpdateFn();
-    RenderFn();
-    dt = esat::Time() - last_time;
+    delta_time = esat::Time() - last_time;
     last_time = esat::Time();
-    ImGuiFn(dt);
+    UpdateFn(delta_time);
+    RenderFn();
+    ImGuiFn(delta_time);
     esat::WindowFrame();
   }
   return 0;

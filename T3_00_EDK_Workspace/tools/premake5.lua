@@ -17,8 +17,8 @@ project_names = {
   "PR03_02_FirstScene",
   
   "PR03_03_SolarSystem",
-  --"PR03_04_BasicMaterial",
-  --"PR03_05_CustomMaterial",
+  "PR03_04_BasicMaterial",
+  "PR03_05_CustomMaterial",
   --"PR03_06_Quad",
   --"PR03_07_Cube",
   --"PR03_08_Sphere",
@@ -144,10 +144,15 @@ for i, prj in ipairs(project_names) do
   }
 end
 
---[[
---For more specific configuration in a project, do:
-project "PR03_00_Template"
-	files {
-	  path.join(PROJ_DIR, "./tests" .. PR03_00_Template.cc"),
+--Specific extra files per project:
+project "PR03_04_BasicMaterial"
+  files {
+    path.join(PROJ_DIR, "./tests/material_basic.cc"),
+    path.join(PROJ_DIR, "./tests/material_basic.h"),
   }
-]]--
+
+project "PR03_05_CustomMaterial"
+  files {
+    path.join(PROJ_DIR, "./tests/material_custom.cc"),
+    path.join(PROJ_DIR, "./tests/material_custom.h"),
+  }
