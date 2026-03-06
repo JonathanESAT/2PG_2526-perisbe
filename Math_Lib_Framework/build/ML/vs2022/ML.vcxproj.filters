@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\ML">
+      <UniqueIdentifier>{1141B8DA-FDF8-F927-6600-D38352D79418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ML">
+      <UniqueIdentifier>{354A661C-21EC-90F2-0AA7-A446F6E71743}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\ML\mat_2.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\mat_2.inl">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\mat_3.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\mat_3.inl">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\mat_4.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\mat_4.inl">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_2.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_2.inl">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_3.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_3.inl">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_4.h">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ML\vec_4.inl">
+      <Filter>include\ML</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\ML\mat_2.cc">
+      <Filter>src\ML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ML\mat_3.cc">
+      <Filter>src\ML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ML\mat_4.cc">
+      <Filter>src\ML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ML\vec_2.cc">
+      <Filter>src\ML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ML\vec_3.cc">
+      <Filter>src\ML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ML\vec_4.cc">
+      <Filter>src\ML</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
