@@ -86,19 +86,82 @@ UpdateParticles:
 
     stmdb   sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,r14}
    
-    ldrb    r3,[r1,#2]
-    cmp     r3,#0          @ if (particles->alive)
+    mov r4, r0
+    mov r5, r1
+    mov r6, r2
 
-    beq     skip_update
+bucle:
+
+    ldrb r0, [r4, #2]           @r4 = alive
+    cmp r0, #0                  @if alive = 0
+    beq siguiente               
+
+    ldrb r7, [r4, #0]           @r7 = x
+    ldrb r8, [r4, #1]           @r8 = y
+
+    mov r0, r8, lsl #4          @r0 = y * 16
+    rsb r0, r0, r8, lsl #8      @r0 = y * 240
+
+    add r0, r0, r7              @r0 = x + y * 240
+    mov r0, r0, lsl #1          @r0 = r0 * 2
+
+    add r0, r0, r6              @r0 = r0 + screen
+    mov r9, r0                  @r9 = r0
+
+    add r10, r9, #480         @r10 = r9 + 480 
+
+    ldrh r0, [r10, #0]          @r0 = down[0]
+
+    cmp r0, #0                  @if r0 = 0
+    moveq r11, #0               @new_x = 0
+    beq mover
+
+    ldrh r0, [r10, #-2]         @r0 = down[-1]
+    cmp r0, #0                  @if r0 = 0
+    mvneq r11, #0               @new_x = -1
+    beq mover
+
+    ldrh r0, [r10, #2]          @r0 = down[1]
+    cmp r0, #0                  @if r0 = 0
+
+    moveq r11, #1               @new_x = 1
+    beq mover
+
+    b matar
+
+
+mover: 
     
-    ldrh    r3,[r0,#0]     @ int x = particles->x;
-    ldrh    r4,[r0,#2]     @ int y = particles->y; 
-    mov     r5,#240        @ SCREEN_W   
+    mov r0, #0                  @r0 = BLACK (0)
+    strh r0, [r9, #0]           @*current = BLACK
+    mov r1, r11, lsl #1         @r1 = new_x * 2 
 
-    cmp     r4,#33
-    beq     NO_SLOT    
+    add r1, r1, r10             @r1 = down + new_x * 2
+    mov r0, #0x7F00             @r0 = 0x7F00
+    orr r0, r0, #0xFF           @r0 = 0x7FFF = WHITE
+
+    strh r0, [r1]               @down[new_x] = WHITE
+
+    add r0, r7, r11             @r0 = x + new_x
+    strb r0, [r4, #0]           @particles->x = x + new_x
+
+    add r0, r8, #1              @r0 = y + 1
+    strb r0, [r4, #1]           @particles->y = y + 1
+    b siguiente
 
 
+matar:
+
+    mov r0, #0                  @r0 = 0
+    strb r0, [r4, #2]           @particles->alive = 0
+
+siguiente:
+
+    add r4, r4, #4              @r4 = siguiente particula
+    subs r5, r5, #1             @nparticles-- y actualizar flags
+    bne bucle
+
+fin:
     ldmia   sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,r14}
     bx      lr
 
