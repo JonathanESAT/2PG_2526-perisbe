@@ -17,7 +17,7 @@
 #include "EDK/edk_drawable.h"
 #include "EDK/edk_material_diffuse_texture.h"
 #include "EDK/edk_material_diffuse.h"
-#include "material_custom.h"
+#include "include/material_custom.h"
 #include "EDK/edk_texture.h"
 #include "EDK/dev/edk_gpu_manager.h"
 #include "ESAT_extra/imgui.h"

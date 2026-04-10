@@ -19,12 +19,12 @@ project_names = {
   "PR03_03_SolarSystem",
   "PR03_04_BasicMaterial",
   "PR03_05_CustomMaterial",
-  --"PR03_06_Quad",
-  --"PR03_07_Cube",
-  --"PR03_08_Sphere",
-  --"PR03_09_Surface",
-  --"PR03_10_Camera",
-  --"PR03_11_Terrain",
+  "PR03_06_Quad",
+  "PR03_07_Cube",
+  "PR03_08_Sphere",
+  "PR03_09_Surface",
+  "PR03_10_Terrain",
+  --"PR03_11_Camera",
   --"PR03_12_Transparencies",
   --"PR03_13_DemoRenderTarget",
   --"PR03_14_BasicPostprocess",
@@ -144,15 +144,3 @@ for i, prj in ipairs(project_names) do
   }
 end
 
---Specific extra files per project:
-project "PR03_04_BasicMaterial"
-  files {
-    path.join(PROJ_DIR, "./tests/material_basic.cc"),
-    path.join(PROJ_DIR, "./tests/material_basic.h"),
-  }
-
-project "PR03_05_CustomMaterial"
-  files {
-    path.join(PROJ_DIR, "./tests/material_custom.cc"),
-    path.join(PROJ_DIR, "./tests/material_custom.h"),
-  }
